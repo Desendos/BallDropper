@@ -87,7 +87,7 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam){
 			break;
 		case WM_LBUTTONDOWN:
 			if(g_Game.guiState == MAINSTATE){
-				g_Game.guiState = g_Game.guiState = GAMESTATE;
+				g_Game.createGameObjects();
 				break;
 			}
 			if(g_Game.guiState == GAMESTATE){

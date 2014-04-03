@@ -20,3 +20,9 @@ void HavokObj::setRigidBodyInfo(hkpWorld *world, hkpShape *hks, float mass){
 	world->addEntity(rb);
 	rb->removeReference();
 }
+
+void HavokObj::removeRigidBody(hkpWorld *world){
+	world->removeEntity(rb);
+	rb = NULL;
+	delete rb;
+}

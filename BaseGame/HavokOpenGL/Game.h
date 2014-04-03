@@ -38,6 +38,7 @@ private:
 	float camX, camY, camZ, camRad;
 	float angEW, angNS;
 	int guiState;
+	bool intCalled;
 
 	BFont* font1;
 	char text[256];

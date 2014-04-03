@@ -7,6 +7,7 @@ Game::Game(void){
 	camY = 1.0f;
 	camZ = camRad = 1.0f;
 	fCount = 0;
+	intCalled = false;
 }
 
 Game::~Game(void){
@@ -23,20 +24,15 @@ void Game::Initialise(){
 	DebugOut("Game::Initialise being called");
 	glEnable(GL_POLYGON_SMOOTH);  //set best smoothing
 	glHint(GL_POLYGON_SMOOTH_HINT, GL_NICEST);
-
-	timer = new Timer();
-	font1 = new BFont(hDC, "Courier", 14);
-	gameState =  false;
-	if(pForm == NULL && pbox == NULL && pSphere == NULL){
-		initPhysicsObjects();
+	if(timer == NULL){
+		timer = new Timer();
 	}
-	oPlatform = new OGL_Box(pForm);
-	oPlatform->setRGB(1.0f, 0.5f, 0.5f);
-	oBox = new OGL_Box(pbox);
-	oBox->setRGB(0.0f, 0.0f, 1.0f);
-	oSphere = new OGL_Sphere(pSphere);
-	oSphere->setRGB(1.0f, 0.0f, 0.0f);
-	
+	if(font1 == NULL){
+		font1 = new BFont(hDC, "Courier", 14);
+	}
+	gameState =  false;
+	//oSphere = new OGL_Sphere(pSphere);
+	//oSphere->setRGB(1.0f, 0.0f, 0.0f);	
 }
 
 void Game::Shutdown(){
@@ -46,9 +42,9 @@ void Game::Shutdown(){
 	//delete pForm;
 	//delete pbox;
 	//delete pSphere;
-	delete oPlatform;
-	delete oBox;
-	delete oSphere;
+	//delete oPlatform;
+	//delete oBox;
+	//delete oSphere;
 }
 
 void Game::Update(){
@@ -164,43 +160,47 @@ void Game::CameraPos(){
 }
 
 void Game::initPhysicsObjects(){
+	if(intCalled == false){
 	#ifdef _DEBUG
-	hkMemoryRouter* memoryRouter = hkMemoryInitUtil::initChecking( hkMallocAllocator::m_defaultMallocAllocator, hkMemorySystem::FrameInfo(2*1024*1024) );
-#else
-	hkMemoryRouter* memoryRouter = hkMemoryInitUtil::initDefault( hkMallocAllocator::m_defaultMallocAllocator, hkMemorySystem::FrameInfo(1024*1024) );
-#endif
-	hkBaseSystem::init( memoryRouter, errorReport);
-	hkpWorldCinfo worldInfo;	// Create the simulation world1
-	worldInfo.m_gravity.set(0.0f,-9.8f,0.0f);
-	worldInfo.setBroadPhaseWorldSize(100.0f);	//
-	m_world = new hkpWorld(worldInfo); 
+		hkMemoryRouter* memoryRouter = hkMemoryInitUtil::initChecking( hkMallocAllocator::m_defaultMallocAllocator, hkMemorySystem::FrameInfo(2*1024*1024) );
+	#else
+		hkMemoryRouter* memoryRouter = hkMemoryInitUtil::initDefault( hkMallocAllocator::m_defaultMallocAllocator, hkMemorySystem::FrameInfo(1024*1024) );
+	#endif
+		hkBaseSystem::init( memoryRouter, errorReport);
+		hkpWorldCinfo worldInfo;	// Create the simulation world1
+		worldInfo.m_gravity.set(0.0f,-9.8f,0.0f);
+		worldInfo.setBroadPhaseWorldSize(100.0f);	//
+		m_world = new hkpWorld(worldInfo); 
+		// This is needed to detect collisionss
+		hkpAgentRegisterUtil::registerAllAgents(m_world->getCollisionDispatcher());
+	#ifdef _DEBUG
+		m_physicsContext = new hkpPhysicsContext();//Connect VDB
+		m_physicsContext->addWorld(m_world); // add all worlds
+		hkpPhysicsContext::registerAllPhysicsProcesses();
+		hkArray<hkProcessContext*> contexts;
+		contexts.pushBack(m_physicsContext );  
+		m_vdb = new hkVisualDebugger( contexts );
+		m_vdb->serve();
+	#endif
+	}
+
 	m_world->lock();	//****
-	// This is needed to detect collisionss
-	hkpAgentRegisterUtil::registerAllAgents(m_world->getCollisionDispatcher());
-#ifdef _DEBUG
-	m_physicsContext = new hkpPhysicsContext();//Connect VDB
-	m_physicsContext->addWorld(m_world); // add all worlds
-	hkpPhysicsContext::registerAllPhysicsProcesses();
-	hkArray<hkProcessContext*> contexts;
-	contexts.pushBack(m_physicsContext );  
-	m_vdb = new hkVisualDebugger( contexts );
-	m_vdb->serve();
-#endif
+
 	if(pForm == NULL){
 		pForm = new box(2.0f,0.1f,2.0f);
 	}
 	pForm->setPos(Vector(1.0f, 1.2f, 0.0f));
 	pForm->init(m_world);
 	if(pbox == NULL){
-		pbox = new box;
+		pbox = new box(0.5f,0.5f,0.5f);
 	}
 	pbox->setPos(Vector(1.0f, 1.2f, 0.0f));
 	pbox->init(m_world);
-	if(pSphere == NULL){
+	/*if(pSphere == NULL){
 		pSphere =  new Sphere(2.0f,0.1f,2.0f);
 	}
 	pForm->setPos(Vector(1.2f, 1.2f, 0.0f));
-	pSphere->init(m_world);
+	pSphere->init(m_world);*/
 
 	hkpGenericConstraintData* data = new hkpGenericConstraintData();	// Create constraint on the level
 	hkpConstraintConstructionKit kit;
@@ -226,28 +226,36 @@ void Game::initPhysicsObjects(){
 void Game::removeGameObjects(){
 	guiState = ENDSTATE;
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-	//delete pForm;
-	//delete pbox;
+	pForm->removeRigidBody(m_world);
+	delete pForm;
+	pForm = NULL;
+	pbox->removeRigidBody(m_world);
+	delete pbox;
+	pbox = NULL;
 	//delete pSphere;
 	delete oPlatform;
+	oPlatform = NULL;
 	delete oBox;
-	//delete oSphere;
+	oBox = NULL;
 }
 
 void Game::createGameObjects(){
-	guiState = GAMESTATE;
 	gameState =  false;
 	initPhysicsObjects();
+	intCalled = true;
+	//}
+	/*if(oSphere == NULL){
+		oSphere = new OGL_Sphere(pSphere);
+	}
+	oSphere->setRGB(1.0f, 0.0f, 0.0f);*/
 	if(oPlatform == NULL){
 		oPlatform = new OGL_Box(pForm);
 	}
-	oPlatform->setRGB(1.0f, 0.5f, 0.5f);
 	if(oBox == NULL){
 		oBox = new OGL_Box(pbox);
 	}
+	oPlatform->setRGB(1.0f, 0.5f, 0.5f);
 	oBox->setRGB(0.0f, 0.0f, 1.0f);
-	if(oSphere == NULL){
-		oSphere = new OGL_Sphere(pSphere);
-	}
-	oSphere->setRGB(1.0f, 0.0f, 0.0f);
+
+	guiState = GAMESTATE;
 }
