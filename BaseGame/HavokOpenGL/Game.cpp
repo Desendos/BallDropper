@@ -31,6 +31,7 @@ void Game::Initialise(){
 		font1 = new BFont(hDC, "Courier", 14);
 	}
 	gameState =  false;
+	droppingY = 0.0f;
 	//oSphere = new OGL_Sphere(pSphere);
 	//oSphere->setRGB(1.0f, 0.0f, 0.0f);	
 }
@@ -64,6 +65,12 @@ void Game::Update(){
 		}
 		if(oPlatform){
 			oPlatform->update();
+		}
+		if(oLevel1){
+			oLevel1->update();
+		}
+		if(oLevel2){
+			oLevel2->update();
 		}
 		if(oBox){
 			oBox->update();
@@ -132,6 +139,12 @@ void Game::Render(){
 	if(guiState == GAMESTATE){
 		oPlatform->render();
 		oBox->render();
+		if(oLevel1){ 
+			oLevel1->render();
+		}
+		if(oLevel2){
+			oLevel2->render();
+		}
 //		oSphere->update();
 	}
 	if(guiState == MAINSTATE){
@@ -189,13 +202,16 @@ void Game::initPhysicsObjects(){
 	if(pForm == NULL){
 		pForm = new box(2.0f,0.1f,2.0f);
 	}
-	pForm->setPos(Vector(1.0f, 1.2f, 0.0f));
+	pForm->setPos(Vector(1.0f, droppingY, 0.0f));
 	pForm->init(m_world);
 	if(pbox == NULL){
 		pbox = new box(0.5f,0.5f,0.5f);
 	}
-	pbox->setPos(Vector(1.0f, 1.2f, 0.0f));
+	pbox->setPos(Vector(1.0f, 1.5f, 0.0f));
 	pbox->init(m_world);
+	/*createLevel1();
+	createLevel2();*/
+
 	/*if(pSphere == NULL){
 		pSphere =  new Sphere(2.0f,0.1f,2.0f);
 	}
@@ -242,6 +258,7 @@ void Game::removeGameObjects(){
 void Game::createGameObjects(){
 	gameState =  false;
 	initPhysicsObjects();
+	
 	intCalled = true;
 	//}
 	/*if(oSphere == NULL){
@@ -254,8 +271,41 @@ void Game::createGameObjects(){
 	if(oBox == NULL){
 		oBox = new OGL_Box(pbox);
 	}
+	if(oLevel1 == NULL){
+		//oLevel1 = new OGL_Box(level1);
+	}
 	oPlatform->setRGB(1.0f, 0.5f, 0.5f);
 	oBox->setRGB(0.0f, 0.0f, 1.0f);
 
 	guiState = GAMESTATE;
+}
+
+void Game::createLevel1(){
+	if(level1 == NULL){
+		level1 = lFact->createLevel(Normal);
+	}
+	droppingY = droppingY - 1.0f;
+	level1->setPos(Vector(1.0f, droppingY, 0.0f));
+	level1->init(m_world);
+}
+
+void Game::createLevel2(){
+	if(level2 == NULL){
+	level2 = lFact->createLevel(Normal);
+	}
+	droppingY = droppingY - 1.0f;
+	level2->setPos(Vector(1.0f, droppingY, 0.0f));
+	level2->init(m_world);
+}
+
+void Game::destroyLevel1(){
+	level1->removeRigidBody(m_world);
+	delete level1;
+	level1 = NULL;
+}
+
+void Game::destroyLevel2(){
+	level2->removeRigidBody(m_world);
+	delete level2;
+	level2 = NULL;
 }

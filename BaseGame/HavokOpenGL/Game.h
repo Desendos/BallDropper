@@ -15,6 +15,9 @@ using namespace timer;
 #include "Sphere.h"
 #include "OGL_Box.h"
 #include "OGL_Sphere.h"
+
+#include "LevelFactoryImplementation.h"
+#include "Level.h"
 using namespace random;
 using namespace std;
 
@@ -39,6 +42,7 @@ private:
 	float angEW, angNS;
 	int guiState;
 	bool intCalled;
+	float droppingY;
 
 	BFont* font1;
 	char text[256];
@@ -53,6 +57,12 @@ private:
 	OGL_Box* oPlatform;
 	OGL_Box* oBox;
 	OGL_Sphere* oSphere;
+
+	Level* level1;
+	OGL_Box* oLevel1;
+	Level* level2;
+	OGL_Box* oLevel2;
+	LevelFactory* lFact;
 
 	hkpWorld* m_world;		// Havok persistent objects
 	#ifdef _DEBUG
@@ -114,4 +124,9 @@ public:
 	void createGameObjects();
 	void renderMainMenu();
 	void renderEndMenu();
+
+	void createLevel1();
+	void createLevel2();
+	void destroyLevel1();
+	void destroyLevel2();
 };
