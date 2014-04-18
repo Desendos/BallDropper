@@ -5,6 +5,7 @@ class LevelNormal :
 {
 public:
 	LevelNormal(void);
+	LevelNormal(float x, float y, float z);
 	~LevelNormal(void);
 	void createPlatformObjects();
 };

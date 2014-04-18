@@ -62,6 +62,10 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam){
 					break;
 				case VK_SPACE:
 					g_Game.gameState = true;
+				case VK_TAB:
+					g_Game.destroyLevel1();
+					g_Game.createLevel1();
+
 				default:
 					break;
 			}
@@ -99,6 +103,7 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam){
 			}
 			break;
 		case WM_RBUTTONDOWN:
+			//g_Game.dropBall();
 			break;
 	}
 	return DefWindowProc(hWnd, uMsg, wParam, lParam);

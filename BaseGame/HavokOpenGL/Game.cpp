@@ -34,6 +34,7 @@ void Game::Initialise(){
 	droppingY = 0.0f;
 	//oSphere = new OGL_Sphere(pSphere);
 	//oSphere->setRGB(1.0f, 0.0f, 0.0f);	
+	lFact = new LevelFactoryImplementation();
 }
 
 void Game::Shutdown(){
@@ -63,9 +64,9 @@ void Game::Update(){
 				m_vdb->step(tbf);	// update VDB when running
 			#endif
 		}
-		if(oPlatform){
+		/*if(oPlatform){
 			oPlatform->update();
-		}
+		}*/
 		if(oLevel1){
 			oLevel1->update();
 		}
@@ -137,7 +138,7 @@ void Game::Render(){
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 	gluLookAt(camX,camY+10,camZ, 0.0f, 0.0f, 0.0f, 0.0f, 1.0f, 0.0f);
 	if(guiState == GAMESTATE){
-		oPlatform->render();
+//		oPlatform->render();
 		oBox->render();
 		if(oLevel1){ 
 			oLevel1->render();
@@ -199,15 +200,17 @@ void Game::initPhysicsObjects(){
 
 	m_world->lock();	//****
 
-	if(pForm == NULL){
+	/*if(pForm == NULL){
 		pForm = new box(2.0f,0.1f,2.0f);
 	}
 	pForm->setPos(Vector(1.0f, droppingY, 0.0f));
-	pForm->init(m_world);
+	pForm->init(m_world);*/
+	createLevel1();
+	//createLevel2();
 	if(pbox == NULL){
 		pbox = new box(0.5f,0.5f,0.5f);
 	}
-	pbox->setPos(Vector(1.0f, 1.5f, 0.0f));
+	pbox->setPos(Vector(0.0f, 1.5f, 0.0f));
 	pbox->init(m_world);
 	/*createLevel1();
 	createLevel2();*/
@@ -231,10 +234,11 @@ void Game::initPhysicsObjects(){
 		//// do not limit rotation around Y axis
 		kit.setAngularLimit(2, 0.0f, 0.0f);  //stop z-axis rotation
 	kit.end();
-	hkpConstraintInstance* constraint = new hkpConstraintInstance(pForm->getRigidBody(), NULL, data);
-	m_world->addConstraint(constraint);
+//	hkpConstraintInstance* constraint = new hkpConstraintInstance(pForm->getRigidBody(), NULL, data);
+//	m_world->addConstraint(constraint);
+
 	data->removeReference();
-	constraint->removeReference();
+//	constraint->removeReference();
 
 	m_world->unlock();
 }
@@ -242,17 +246,24 @@ void Game::initPhysicsObjects(){
 void Game::removeGameObjects(){
 	guiState = ENDSTATE;
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-	pForm->removeRigidBody(m_world);
-	delete pForm;
-	pForm = NULL;
+	//pForm->removeRigidBody(m_world);
+//	delete pForm;
+	//pForm = NULL;
 	pbox->removeRigidBody(m_world);
 	delete pbox;
 	pbox = NULL;
 	//delete pSphere;
-	delete oPlatform;
-	oPlatform = NULL;
+	//delete oPlatform;
+	//oPlatform = NULL;
 	delete oBox;
 	oBox = NULL;
+	delete oLevel1;
+	oLevel1 = NULL;
+	delete oLevel2;
+	oLevel2 = NULL;
+	destroyLevel1();
+	//destroyLevel2();
+	
 }
 
 void Game::createGameObjects(){
@@ -266,46 +277,63 @@ void Game::createGameObjects(){
 	}
 	oSphere->setRGB(1.0f, 0.0f, 0.0f);*/
 	if(oPlatform == NULL){
-		oPlatform = new OGL_Box(pForm);
+//		oPlatform = new OGL_Box(pForm);
 	}
 	if(oBox == NULL){
 		oBox = new OGL_Box(pbox);
 	}
-	if(oLevel1 == NULL){
-		//oLevel1 = new OGL_Box(level1);
-	}
-	oPlatform->setRGB(1.0f, 0.5f, 0.5f);
+	
+	
+	//oPlatform->setRGB(1.0f, 0.5f, 0.5f);
 	oBox->setRGB(0.0f, 0.0f, 1.0f);
+
+	
 
 	guiState = GAMESTATE;
 }
 
 void Game::createLevel1(){
 	if(level1 == NULL){
-		level1 = lFact->createLevel(Normal);
+		level1 = lFact->createLevel(Normal, 2.0f,0.1f,2.0f);
 	}
 	droppingY = droppingY - 1.0f;
-	level1->setPos(Vector(1.0f, droppingY, 0.0f));
+	level1->setPos(Vector(0.0f, droppingY, 0.0f));
 	level1->init(m_world);
+	if(oLevel1 == NULL){
+		oLevel1 = new OGL_Level(level1);
+	}
+	oLevel1->setRGB(1.0f, 1.0f, 1.0f);
 }
 
 void Game::createLevel2(){
 	if(level2 == NULL){
-	level2 = lFact->createLevel(Normal);
+	level2 = lFact->createLevel(Normal, 2.0f,0.1f,2.0f);
 	}
 	droppingY = droppingY - 1.0f;
-	level2->setPos(Vector(1.0f, droppingY, 0.0f));
+	level2->setPos(Vector(20000.0f, 20.0f, 20.0f));
 	level2->init(m_world);
+	if(oLevel2 == NULL){
+		oLevel2 = new OGL_Level(level2);
+	}
+	oLevel2->setRGB(1.0f, 1.0f, 1.0f);
 }
 
 void Game::destroyLevel1(){
 	level1->removeRigidBody(m_world);
 	delete level1;
 	level1 = NULL;
+	delete oLevel1;
+	oLevel1 = NULL;
 }
 
 void Game::destroyLevel2(){
 	level2->removeRigidBody(m_world);
 	delete level2;
 	level2 = NULL;
+	delete oLevel2;
+	oLevel2 = NULL;
+}
+
+void Game::dropBall(){
+	pbox->setPos(Vector(0.0f, 3.0f, 0.0f));
 }

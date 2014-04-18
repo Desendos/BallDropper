@@ -5,6 +5,7 @@ class PickupLevel :
 {
 public:
 	PickupLevel(void);
+	PickupLevel(float x, float y, float z);
 	~PickupLevel(void);
 	void createPlatformObjects();
 };

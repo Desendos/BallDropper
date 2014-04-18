@@ -5,6 +5,7 @@ class EnemyLevel :
 {
 public:
 	EnemyLevel(void);
+	EnemyLevel(float x, float y, float z);
 	~EnemyLevel(void);
 	void createPlatformObjects();
 };

@@ -5,6 +5,7 @@ class IceLevel :
 {
 public:
 	IceLevel(void);
+	IceLevel(float x, float y, float z);
 	~IceLevel(void);
 	void createPlatformObjects();
 };

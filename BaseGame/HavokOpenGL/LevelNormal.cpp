@@ -1,8 +1,12 @@
 #include "LevelNormal.h"
 
 
-LevelNormal::LevelNormal(void)
+LevelNormal::LevelNormal(float x, float y, float z)
 {
+	sx = x;
+	sy = y;
+	sz = z;
+	pos = dir = Vector(0,0,0);
 }
 
 

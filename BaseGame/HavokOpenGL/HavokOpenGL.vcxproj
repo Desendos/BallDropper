@@ -107,6 +107,7 @@
     <ClCompile Include="LevelNormal.cpp" />
     <ClCompile Include="Main.cpp" />
     <ClCompile Include="OGL_Box.cpp" />
+    <ClCompile Include="OGL_Level.cpp" />
     <ClCompile Include="OGL_Sphere.cpp" />
     <ClCompile Include="PickupLevel.cpp" />
     <ClCompile Include="Platform.cpp" />
@@ -128,6 +129,7 @@
     <ClInclude Include="LevelFactoryImplementation.h" />
     <ClInclude Include="LevelNormal.h" />
     <ClInclude Include="OGL_Box.h" />
+    <ClInclude Include="OGL_Level.h" />
     <ClInclude Include="OGL_Sphere.h" />
     <ClInclude Include="PickupLevel.h" />
     <ClInclude Include="Platform.h" />
