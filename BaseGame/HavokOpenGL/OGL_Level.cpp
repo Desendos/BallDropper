@@ -7,7 +7,12 @@ OGL_Level::OGL_Level(Level* hvkBox) : HvkOGLObj(hvkBox){
 }
 
 void OGL_Level::render(){
+	float matSpec[] = {1.0f, 0.0f, 0.0f, 1.0f };
+	float matShiny[] = {100.0 };  //128 is max value
 	glPushMatrix();
+		glMaterialfv(GL_FRONT, GL_AMBIENT, matSpec);
+		glMaterialfv(GL_FRONT, GL_SPECULAR, matSpec);
+		glMaterialfv(GL_FRONT, GL_SHININESS, matShiny);
 		glColor3f(r, g, b);
 		// Perform transformations here in TRS order
 		glTranslatef(hObj->getPos().x, hObj->getPos().y, hObj->getPos().z);
@@ -19,6 +24,7 @@ void OGL_Level::render(){
 		drawFace(3, 0, 1, 2);
 		drawFace(4, 7, 6, 5);
 	glPopMatrix();
+	glDisable(GL_TEXTURE_2D);
 }
 
 OGL_Level::~OGL_Level(void){

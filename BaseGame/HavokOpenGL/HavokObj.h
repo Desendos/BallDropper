@@ -29,4 +29,5 @@ public:
 	float getRadius(){ return radius; }
 	void  setRigidBodyInfo(hkpWorld *world, hkpShape *hks, float mass);
 	void removeRigidBody(hkpWorld *world);
+	void setRot();
 };
