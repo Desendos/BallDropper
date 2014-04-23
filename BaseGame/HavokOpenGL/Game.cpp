@@ -148,6 +148,7 @@ void Game::renderEndMenu(){
 void Game::Render(){
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 	gluLookAt(camX+200, camY+200, camZ, toX, toY, toZ, 0.0f, 1.0f, 0.0f);
+	glEnable(GL_TEXTURE_2D); 
 	if(guiState == GAMESTATE){
 //		oPlatform->render();
 		oBox->render();
@@ -170,6 +171,7 @@ void Game::Render(){
 	if(guiState == ENDSTATE){
 		renderEndMenu();	
 	}
+	glDisable(GL_TEXTURE_2D);
 
 	RenderHUD();
 	fCount++;
@@ -307,9 +309,10 @@ void Game::createGameObjects(){
 	//oPlatform->setRGB(1.0f, 0.5f, 0.5f);
 	oBox->setRGB(0.0f, 0.0f, 1.0f);
 
-	/*md2m = new MD2Model;
+	md2m = new MD2Model;
 	md2m->LoadMD2Model("Data/pknight/pknight.md2", "Data/pknight/pknight.bmp");
-	md2m->pos = Vector(0.0f, 0.0f, 0.0f);	*/
+	md2m->pos = Vector(0.0f, 0.0f, 0.0f);	
+	
 
 	//
 	//float matSpec[] = {0.0f, 1.0f, 0.0f, 1.0f };
@@ -345,6 +348,7 @@ void Game::createLevel1(){
 		oLevel1 = new OGL_Level(level1);
 	}
 	oLevel1->setRGB(1.0f, 1.0f, 1.0f);
+	oLevel1->reloadTextures();
 }
 
 void Game::createLevel2(){

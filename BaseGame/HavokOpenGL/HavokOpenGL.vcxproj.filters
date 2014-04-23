@@ -165,4 +165,15 @@
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
+  <ItemGroup>
+    <None Include="Images\green.bmp">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="Images\rock.bmp">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="Images\Terrain.bmp">
+      <Filter>Resource Files</Filter>
+    </None>
+  </ItemGroup>
 </Project>

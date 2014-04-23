@@ -145,6 +145,11 @@
     <ClInclude Include="Timer.h" />
     <ClInclude Include="vector.h" />
   </ItemGroup>
+  <ItemGroup>
+    <None Include="Images\green.bmp" />
+    <None Include="Images\rock.bmp" />
+    <None Include="Images\Terrain.bmp" />
+  </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
   </ImportGroup>

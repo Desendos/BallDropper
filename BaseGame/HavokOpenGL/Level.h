@@ -1,6 +1,7 @@
 #pragma once
 #include "platform.h"
 #include "HavokObj.h"
+#include "LoadTextures.h"
 
 class Level : 
 	public HavokObj
@@ -14,5 +15,6 @@ public:
 	float sz;
 	virtual void createPlatformObjects() = 0;
 	void init(hkpWorld* world);
+
 };
 
