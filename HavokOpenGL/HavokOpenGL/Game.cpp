@@ -19,6 +19,8 @@ Game::Game(void){
 	droppingY = 0.0;
 	tiltX = 0;
 	tiltZ = 0;
+	sphereInZone= false;
+	lives = 3;
 }
 
 Game::~Game(void){
@@ -43,7 +45,10 @@ void Game::Initialise(){
 	initPhysicsObjects();
 	
 	oSphere = new OGL_Sphere(pSphere, "Images/metal.bmp");
-	oSphere->setRGB(0.0,1.0,0.0);
+	oSphere->setRGB(1.0,1.0,1.0);
+
+	skyBox = new Marker(15, 15, 15, "Images/green.bmp");
+	skyBox->setRGB(1.0,1.0,1.0);
 
 	makeGoal();
 }
@@ -91,6 +96,13 @@ void Game::Update(){
 		if(isColliding == true){
 			deleteEverything();
 			makeGoal();
+		}
+	}
+	if(pSphere->getPos().y <= -15){
+		sphereInZone == false;
+		if(sphereInZone == false){
+				dropSphere();
+				lives--;
 		}
 	}
 	//Camera
@@ -146,7 +158,7 @@ void Game::Render(){
 	//Objects Rendering
 	
 	oSphere->render();
-	
+	skyBox->render();
 	//End
 	RenderHUD();
 	fCount++;
@@ -195,12 +207,13 @@ void Game::initPhysicsObjects(){
 	intCalled = true;
 	
 	//OBJECTS
-
+	//Make Level1
 	createLevel1();
-
+	//Make Sphere and drop it
 	pSphere = new Sphere(0.2,0.2,0.2);
 	pSphere->setPos(Vector(0.0,3.0,0.0));
 	pSphere->init(m_world);
+	dropSphere();
 
 	//makeWall();
 
@@ -324,4 +337,8 @@ void Game::controlsLogic(){
 	if(tiltX == -1 && tiltZ == 1){
 		rotatePlatformZPostiveXNegative();
 	}
+}
+
+void Game::dropSphere(){
+	pSphere->getRigidBody()->setPosition(hkVector4(pLevel1->getPos().x,pLevel1->getPos().y + 6.0,pLevel1->getPos().z));
 }

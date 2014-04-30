@@ -75,6 +75,8 @@ private:
 	OGL_Level* oLevel1;
 	OGL_Sphere* oSphere;
 	Marker* goal;
+	Marker* skyBox;
+
 	bool isColliding;
 	bool intCalled;
 	float toX,toY,toZ;
@@ -84,6 +86,8 @@ private:
 	float droppingY;
 	int tiltX;
 	int tiltZ;
+	bool sphereInZone;
+	int lives;
 public:
 	bool physicsState;
 	int gameState;
@@ -158,4 +162,6 @@ public:
 	void rotatePlatformXZZero();
 
 	void controlsLogic();
+	
+	void dropSphere();
 };

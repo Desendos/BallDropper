@@ -118,7 +118,7 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam){
 					}
 					break;
 				case VK_R:
-					
+					g_Game.dropSphere();
 					break;
 				case VK_Q:
 					
