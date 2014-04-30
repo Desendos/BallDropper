@@ -148,4 +148,14 @@ public:
 	
 	void rotatePlatformZAxisPositive();
 	void rotatePlatformZAxisNegative();
+
+	void rotatePlatformXZAxisPositive();
+	void rotatePlatformXZAxisNegative();
+
+	void rotatePlatformXPostiveZNegative();
+	void rotatePlatformZPostiveXNegative();
+
+	void rotatePlatformXZZero();
+
+	void controlsLogic();
 };

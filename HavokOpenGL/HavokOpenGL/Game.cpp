@@ -42,7 +42,7 @@ void Game::Initialise(){
 	font1 = new BFont(hDC, "Courier", 14);
 	initPhysicsObjects();
 	
-	oSphere = new OGL_Sphere(pSphere, "Images/green.bmp");
+	oSphere = new OGL_Sphere(pSphere, "Images/metal.bmp");
 	oSphere->setRGB(0.0,1.0,0.0);
 
 	makeGoal();
@@ -231,7 +231,7 @@ void Game::deleteEverything(){
 void Game::createLevel1(){
 	int randType = rnd.number(0, 3);
 	if(!pLevel1){
-		pLevel1 = levelFact->createLevel(randType,2.0,0.1,2.0);
+		pLevel1 = levelFact->createLevel(randType,2.0,0.3,2.0);
 		pLevel1->setPos(Vector(0.0,0.0,0.0));
 
 	}
@@ -257,48 +257,71 @@ void Game::deleteLevel1(){
 
 void Game::rotatePlatformXAxisPositive(){
 //	hkQuaternion* quat = pLevel1->getRigidBody()->getRotation().getAngle;
-	if(tiltX == 0){
-		pLevel1->getRigidBody()->setRotation(hkQuaternion(0.9990482215818578, 0, 0,0.04361938736533599));
-		tiltX = 1;
-	}
-	if(tiltX == -1){
-		pLevel1->getRigidBody()->setRotation(hkQuaternion(1, 0, 0, 0));
-		tiltX = 0;
-	}
+	pLevel1->getRigidBody()->setRotation(hkQuaternion(0.9990482215818578, 0, 0, 0.04361938736533599));
+	
 }
 
 void Game::rotatePlatformXAxisNegative(){
 //	hkQuaternion* quat = pLevel1->getRigidBody()->getRotation().getAngle;
-	if(tiltX == 0){
-			pLevel1->getRigidBody()->setRotation(hkQuaternion(0.9990482215818578, 0, 0,-0.04361938736533599));
-		tiltX = -1;
-	}
-	if(tiltX == 1){
-		pLevel1->getRigidBody()->setRotation(hkQuaternion(1, 0, 0, 0));
-		tiltX = 0;
-	}
+	pLevel1->getRigidBody()->setRotation(hkQuaternion(0.9990482215818578, 0, 0,-0.04361938736533599));
 }
 
 void Game::rotatePlatformZAxisPositive(){
 //	hkQuaternion* quat = pLevel1->getRigidBody()->getRotation().getAngle;
-	if(tiltZ == 0){
-		pLevel1->getRigidBody()->setRotation(hkQuaternion(0.9990482215818578, 0.04361938736533599, 0,0));
-		tiltZ = 1;
-	}
-	if(tiltZ == -1){
-		pLevel1->getRigidBody()->setRotation(hkQuaternion(1, 0, 0, 0));
-		tiltZ = 0;
-	}
+	pLevel1->getRigidBody()->setRotation(hkQuaternion(0.9990482215818578, 0.04361938736533599, 0,0));
 }
 
 void Game::rotatePlatformZAxisNegative(){
 //	hkQuaternion* quat = pLevel1->getRigidBody()->getRotation().getAngle;
-	if(tiltZ == 0){
-			pLevel1->getRigidBody()->setRotation(hkQuaternion(0.9990482215818578, -0.04361938736533599, 0,0));
-		tiltZ = -1;
+	pLevel1->getRigidBody()->setRotation(hkQuaternion(0.9990482215818578, -0.04361938736533599, 0,0));
+}
+
+void Game::rotatePlatformXZAxisPositive(){
+	pLevel1->getRigidBody()->setRotation(hkQuaternion(0.9980973490458728, 0.04357787137382908, 0.0019026509541272335, 0.04357787137382908));
+}
+
+void Game::rotatePlatformXZAxisNegative(){
+	pLevel1->getRigidBody()->setRotation(hkQuaternion(0.9980973490458728, -0.04357787137382908, 0.0019026509541272335, -0.04357787137382908));
+}
+
+void Game::rotatePlatformXPostiveZNegative(){
+	pLevel1->getRigidBody()->setRotation(hkQuaternion(0.9980973490458728, -0.04357787137382908, -0.0019026509541272335, 0.04357787137382908));
+}
+
+void Game::rotatePlatformZPostiveXNegative(){
+	pLevel1->getRigidBody()->setRotation(hkQuaternion(0.9980973490458728, 0.04357787137382908, -0.0019026509541272335, -0.04357787137382908));
+}
+
+void Game::rotatePlatformXZZero(){
+	pLevel1->getRigidBody()->setRotation(hkQuaternion(1, 0, 0, 0));
+}
+
+void Game::controlsLogic(){
+	if(tiltX == 0 && tiltZ == 0){
+		rotatePlatformXZZero();
 	}
-	if(tiltZ == 1){
-		pLevel1->getRigidBody()->setRotation(hkQuaternion(1, 0, 0, 0));
-		tiltZ = 0;
+	if(tiltX == 1 && tiltZ == 0){
+		rotatePlatformXAxisPositive();
+	}
+	if(tiltX == -1 && tiltZ == 0){
+		rotatePlatformXAxisNegative();
+	}
+	if(tiltX == 0 && tiltZ == 1){
+		rotatePlatformZAxisPositive();
+	}
+	if(tiltX == 0 && tiltZ == -1){
+		rotatePlatformZAxisNegative();
+	}
+	if(tiltX == 1 && tiltZ == 1){
+		rotatePlatformXZAxisPositive();
+	}
+	if(tiltX == -1 && tiltZ == -1){
+		rotatePlatformXZAxisNegative();
+	}
+	if(tiltX == 1 && tiltZ == -1){
+		rotatePlatformXPostiveZNegative();
+	}
+	if(tiltX == -1 && tiltZ == 1){
+		rotatePlatformZPostiveXNegative();
 	}
 }

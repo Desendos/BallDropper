@@ -94,16 +94,28 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam){
 					g_Game.placingWalls = !g_Game.placingWalls;
 					break;
 				case VK_W:
-					g_Game.rotatePlatformZAxisPositive();
+					if(g_Game.tiltZ != 1){
+						g_Game.tiltZ = g_Game.tiltZ + 1;
+						g_Game.controlsLogic();
+					}
 					break;
 				case VK_S:
-					g_Game.rotatePlatformZAxisNegative();
+					if(g_Game.tiltZ != -1){
+						g_Game.tiltZ = g_Game.tiltZ - 1;
+						g_Game.controlsLogic();
+					}
 					break;
 				case VK_A:
-					g_Game.rotatePlatformXAxisNegative();
+					if(g_Game.tiltX != -1){
+						g_Game.tiltX = g_Game.tiltX - 1;
+						g_Game.controlsLogic();
+					}
 					break;
 				case VK_D:
-					g_Game.rotatePlatformXAxisPositive();
+					if(g_Game.tiltX != 1){
+						g_Game.tiltX = g_Game.tiltX + 1;
+						g_Game.controlsLogic();
+					}
 					break;
 				case VK_R:
 					
