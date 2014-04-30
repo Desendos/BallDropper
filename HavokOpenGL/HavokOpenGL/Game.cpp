@@ -246,7 +246,6 @@ void Game::createLevel1(){
 	if(!pLevel1){
 		pLevel1 = levelFact->createLevel(randType,2.0,0.3,2.0);
 		pLevel1->setPos(Vector(0.0,0.0,0.0));
-
 	}
 	tiltX = 0;
 	tiltZ = 0;
