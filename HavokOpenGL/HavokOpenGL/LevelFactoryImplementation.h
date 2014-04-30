@@ -4,7 +4,7 @@
 #include "EnemyLevel.h"
 #include "IceLevel.h"
 #include "PickupLevel.h"
-enum levelTypes {Normal, Enemy, Ice, Pickup};
+enum levelTypes {NormalL, EnemyL, IceL, PickupL};
 class LevelFactoryImplementation :
 	public LevelFactory
 {

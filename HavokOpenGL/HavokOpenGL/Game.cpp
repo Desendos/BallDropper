@@ -25,7 +25,6 @@ Game::Game(void){
 
 Game::~Game(void){
 	deleteEverything();
-	
 }
 
 void Game::InitOpenGL(){
@@ -39,6 +38,7 @@ void Game::Initialise(){
 	glHint(GL_POLYGON_SMOOTH_HINT, GL_NICEST);
 
 	levelFact = new LevelFactoryImplementation();
+	enemyFact = new EnemyFactoryImplementation();
 
 	timer = new Timer();
 	font1 = new BFont(hDC, "Courier", 14);
@@ -47,10 +47,18 @@ void Game::Initialise(){
 	oSphere = new OGL_Sphere(pSphere, "Images/metal.bmp");
 	oSphere->setRGB(1.0,1.0,1.0);
 
-	skyBox = new Marker(15, 15, 15, "Images/green.bmp");
+	skyBox = new Marker(15, 15, 15, "Images/sky.bmp");
 	skyBox->setRGB(1.0,1.0,1.0);
 
 	makeGoal();
+
+	/*loadFileof.open("loadText.txt");
+	loadFileof << "Line ";
+	loadFileof.close();
+
+	loadFileif.open("loadText.txt");*/
+	
+	enemyf = enemyFact->createEnemy(BIG);
 }
 
 void Game::Shutdown(){
@@ -105,6 +113,7 @@ void Game::Update(){
 				lives--;
 		}
 	}
+	enemyf->aiUpdate(pSphere);
 	//Camera
 	//if(pLevel1){
 		toX = pLevel1->getPos().x; toY = pLevel1->getPos().y; toZ = pLevel1->getPos().z;
@@ -126,10 +135,12 @@ void Game::RenderHUD(){
 	glDisable(GL_BLEND);
 	
 	font1->setColor(1.0f, 1.0f, 0.0f);
-	strcpy_s(text, "Ball Droppen - OpenGL and Havok - Project Portfolio");
+	strcpy_s(text, "Ball Dropper - Project Portfolio");
 	font1->printString(4, 15, text);
-	sprintf(text, "Avg FPS: %.1f", (float)fCount / cft);
-	font1->printString(600, 15, text);
+//	getline(loadFileif,line);
+	sprintf(text, "Avg FPS: %.1f Score: %i Lives: %i String: %s", (float)fCount / cft, (int)score, (int)lives, (string)line);
+	
+	font1->printString(400, 15, text);
 	//sprintf(text, "Level type: %s Score: %i",);
 	
 	if(gameState == 0){
@@ -159,6 +170,7 @@ void Game::Render(){
 	
 	oSphere->render();
 	skyBox->render();
+	enemyf->output();
 	//End
 	RenderHUD();
 	fCount++;
@@ -210,7 +222,7 @@ void Game::initPhysicsObjects(){
 	//Make Level1
 	createLevel1();
 	//Make Sphere and drop it
-	pSphere = new Sphere(0.2,0.2,0.2);
+	pSphere = Sphere::getInstance();
 	pSphere->setPos(Vector(0.0,3.0,0.0));
 	pSphere->init(m_world);
 	dropSphere();
@@ -341,4 +353,5 @@ void Game::controlsLogic(){
 
 void Game::dropSphere(){
 	pSphere->getRigidBody()->setPosition(hkVector4(pLevel1->getPos().x,pLevel1->getPos().y + 6.0,pLevel1->getPos().z));
+	pSphere->getRigidBody()->setRotation(hkQuaternion(1,0,0,0));
 }

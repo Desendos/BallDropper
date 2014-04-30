@@ -3,6 +3,8 @@
 class Sphere :
 	public HavokObj
 {
+private:
+	static Sphere* instance;
 public:
 	Sphere(float x, float y, float z);
 	~Sphere(void);
@@ -10,5 +12,6 @@ public:
 	float sx;
 	float sy;
 	float sz;
+	static Sphere* getInstance();
 };
 

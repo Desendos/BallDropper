@@ -23,3 +23,12 @@ void Sphere::init(hkpWorld *world){
 	sphere->setRadius(0.001f); // adjust the convex radius as req’d
 	setRigidBodyInfoSphere(world, sphere);
 }
+
+Sphere* Sphere::instance = NULL;
+
+Sphere* Sphere::getInstance(){
+	if(instance == NULL){
+		instance = new Sphere(0.2,0.2,0.2);
+	}
+	return instance;
+}

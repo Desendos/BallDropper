@@ -12,6 +12,7 @@ using namespace timer;
 
 #define _USE_MATH_DEFINES
 #include <math.h>
+#include <iostream>
 #include "random.h"
 using namespace random;
 using namespace std;
@@ -33,7 +34,9 @@ const int ARRAY_WALL_NUMBER = 3;
 #include "LevelFactoryImplementation.h"
 #include "OGL_Level.h"
 #include "LevelNormal.h"
-
+#include "Enemy.h"
+#include "EnemyFactory.h"
+#include "EnemyFactoryImplementation.h"
 using namespace irrklang;
 
 const float ANGLE_LIMIT = 5.0f * HK_REAL_PI/180.0f; // 7 degrees limit
@@ -76,7 +79,14 @@ private:
 	OGL_Sphere* oSphere;
 	Marker* goal;
 	Marker* skyBox;
+	EnemyFactory* enemyFact;
+	Enemy* enemyf;
 
+	//Files
+	ofstream loadFileof;
+	ifstream loadFileif;
+
+	//Variables
 	bool isColliding;
 	bool intCalled;
 	float toX,toY,toZ;
@@ -88,6 +98,7 @@ private:
 	int tiltZ;
 	bool sphereInZone;
 	int lives;
+	string line;
 public:
 	bool physicsState;
 	int gameState;
