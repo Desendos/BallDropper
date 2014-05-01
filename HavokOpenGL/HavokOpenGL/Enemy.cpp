@@ -44,19 +44,19 @@ void Enemy::aiUpdate(Sphere* ball){
 	//hkVector4 vec = ball->getRigidBody()->getPosition();
 	//hkVector4 vec2 = hkVector4(0,0,0,0);
 	
-	if(ball->getPos().x < px){
+	if(ball->getRigidBody()->getPosition().getComponent(0) < px){
 		px = px - 0.1;
 		enemy->pos = Vector(px, py, pz);
 	}
-	if(ball->getPos().x > px){
+	if(ball->getRigidBody()->getPosition().getComponent(0) > px){
 		px = px + 0.1;
 		enemy->pos = Vector(px, py, pz);
 	}
-	if(ball->getPos().z < px){
+	if(ball->getRigidBody()->getPosition().getComponent(2) < pz){
 		pz = pz - 0.1;
 		enemy->pos = Vector(px, py, pz);
 	}
-	if(ball->getPos().z > pz){
+	if(ball->getRigidBody()->getPosition().getComponent(2) > pz){
 		pz = pz + 0.1;
 		enemy->pos = Vector(px, py, pz);
 	}

@@ -20,6 +20,7 @@ OGL_Level::OGL_Level(Level* hvkBox, char *img) : HvkOGLObj(hvkBox, img){
 void OGL_Level::render(){
 	glPushMatrix();
 		glEnable(GL_TEXTURE_2D);  
+		glDisable(GL_LIGHTING);
 		glBindTexture(GL_TEXTURE_2D, texture);
 		glColor3f(r, g, b);
 		// Perform transformations here in TRS order
@@ -32,6 +33,7 @@ void OGL_Level::render(){
 		drawFace(3, 0, 1, 2);
 		drawFace(4, 7, 6, 5);
 		glDisable(GL_TEXTURE_2D);
+		glEnable(GL_LIGHTING);
 	glPopMatrix();
 }
 

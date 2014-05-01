@@ -39,7 +39,10 @@ const int ARRAY_WALL_NUMBER = 3;
 #include "EnemyFactoryImplementation.h"
 using namespace irrklang;
 
+
 const float ANGLE_LIMIT = 5.0f * HK_REAL_PI/180.0f; // 7 degrees limit
+enum GAMESTATESCREEN{MAINSTATESCREEN = 0, PLAYSTATESCREEN = 1, ENDSTATESCREEN = 2};
+
 
 /**
 The class inherits from BaseGame and provides the game data model and the game logic
@@ -53,6 +56,8 @@ private:
 	int mouseX, mouseY;
 	float camX, camY, camZ, camRad;
 	float angEW, angNS;
+	float lightPos[4];
+	GLUquadricObj * lSphere;
 
 	BFont* font1;
 	char text[256];
@@ -101,9 +106,11 @@ private:
 	int lives;
 	string line;
 	int sphereDensity;
+
 public:
 	bool physicsState;
 	int gameState;
+	int GAMESTATE;
 	Game(void);
 	virtual ~Game(void);
 
@@ -180,4 +187,6 @@ public:
 
 	void setSphereDensity(int densityNum);
 	int getSphereDensity();
+
+	void playInit();
 };

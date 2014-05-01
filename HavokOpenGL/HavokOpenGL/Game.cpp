@@ -35,32 +35,34 @@ void Game::InitOpenGL(){
 }
 
 void Game::Initialise(){
+	GAMESTATE = MAINSTATESCREEN;
 	DebugOut("Game::Initialise being called");
 	glEnable(GL_POLYGON_SMOOTH);  //set best smoothing
 	glHint(GL_POLYGON_SMOOTH_HINT, GL_NICEST);
 
-	levelFact = new LevelFactoryImplementation();
-	enemyFact = new EnemyFactoryImplementation();
+	float matSpec[] = {0.0f, 1.0f, 0.0f, 1.0f };
+	float matShiny[] = {50.0 };  //128 is max value
+	glMaterialfv(GL_FRONT, GL_AMBIENT, matSpec);
+	glMaterialfv(GL_FRONT, GL_SPECULAR, matSpec);
+	glMaterialfv(GL_FRONT, GL_SHININESS, matShiny);
+	lightPos[0]=10; lightPos[1]=-10; lightPos[2]= 10; lightPos[3]=-10.0f;
+	float whiteLight[] = {1.0f, 1.0f, 1.0f, 1.0f };
+	float ambLight[] = {0.1f, 0.1f, 0.1f, 1.0f };
+	glLightfv(GL_LIGHT0, GL_POSITION, lightPos);
+	glLightfv(GL_LIGHT0, GL_DIFFUSE, whiteLight);
+	glLightfv(GL_LIGHT0, GL_SPECULAR, whiteLight);
+	glLightModelfv(GL_LIGHT_MODEL_AMBIENT, ambLight);
+
+	glEnable(GL_LIGHTING);
+	glEnable(GL_LIGHT0);
+
+	lSphere = gluNewQuadric();	//to show where light pos is
+	gluQuadricDrawStyle(lSphere, GLU_FILL);
+	gluQuadricNormals(lSphere, GLU_NONE);
 
 	timer = new Timer();
 	font1 = new BFont(hDC, "Courier", 14);
-	initPhysicsObjects();
 	
-	oSphere = new OGL_Sphere(pSphere, "Images/metal.bmp");
-	oSphere->setRGB(1.0,1.0,1.0);
-
-	skyBox = new Marker(15, 15, 15, "Images/sky.bmp");
-	skyBox->setRGB(1.0,1.0,1.0);
-
-	makeGoal();
-
-	loadFileof.open("loadText.txt");
-	loadFileof << "Line ";
-	loadFileof.close();
-
-	loadFileif.open("loadText.txt");
-	
-	enemyf = enemyFact->createEnemy(BIG, 100, 0, 10);
 	//enemyf->enemy->pos = Vector(100.0,0.0,10.0);
 }
 
@@ -69,6 +71,8 @@ void Game::Shutdown(){
 	DebugOut("Game::Shutdown being called");
 	delete timer;
 	delete font1;
+	loadFileof.close();
+	loadFileif.close();
 	//enemyf->enemy->
 }
 
@@ -79,63 +83,71 @@ void Game::Update(){
 	tbf = cft - lft;
 	lft = cft;
 	//Havok
-	if(physicsState){
-		m_world->stepDeltaTime(tbf); //update physics engine
-		#ifdef _DEBUG
-			m_vdb->step(tbf);	// update VDB when running
-		#endif
+	if(GAMESTATE == MAINSTATESCREEN){
+
 	}
-	//if(physicsState == true){
-	//	if(pBox->getPos().y < -4 /*|| pBoxArray[0]->getPos().y < 6 || pBoxArray[1]->getPos().y < 6 || pBoxArray[2]->getPos().y < 6 || pBoxArray[3]->getPos().y < 6*/){
-	//		//physicsState = false;
-	//		pBoxArray[0]->getRigidBody()->setPosition(hkVector4(0.0,0.0,0.0));
-	//	}
-	//}
-	//if(pSphere->getPos().y < -10.0){//to stop error
-	//	physicsState = false;
-	//}
+	if(GAMESTATE == PLAYSTATESCREEN){
+		if(physicsState){
+			m_world->stepDeltaTime(tbf); //update physics engine
+			#ifdef _DEBUG
+				m_vdb->step(tbf);	// update VDB when running
+			#endif
+		}
+		//if(physicsState == true){
+		//	if(pBox->getPos().y < -4 /*|| pBoxArray[0]->getPos().y < 6 || pBoxArray[1]->getPos().y < 6 || pBoxArray[2]->getPos().y < 6 || pBoxArray[3]->getPos().y < 6*/){
+		//		//physicsState = false;
+		//		pBoxArray[0]->getRigidBody()->setPosition(hkVector4(0.0,0.0,0.0));
+		//	}
+		//}
+		//if(pSphere->getPos().y < -10.0){//to stop error
+		//	physicsState = false;
+		//}
 		
-	//Object Updates
-	if(oSphere){
-		oSphere->update();
-	}
-	if(oLevel1){
-		oLevel1->update();
-	}
-	//Collision dectection
-	if(goal){
-		isColliding = goal->collidesWithSphere(oSphere);
-		if(isColliding == true){
-			deleteEverything();
-			makeGoal();
+		//Object Updates
+		if(oSphere){
+			oSphere->update();
 		}
-	}
-	if(pSphere->getPos().y <= -15){
-		sphereInZone == false;
-		if(sphereInZone == false){
-				dropSphere();
+		if(oLevel1){
+			oLevel1->update();
+		}
+		//Collision dectection
+		if(goal){
+			isColliding = goal->collidesWithSphere(oSphere);
+			if(isColliding == true){
+				deleteEverything();
+				makeGoal();
+				deleteLevel1();
+				createLevel1();
+			}
+		}
+		if(pSphere->getPos().y <= -15){
+			sphereInZone == false;
+			if(sphereInZone == false){
+					dropSphere();
+					lives--;
+			}
+		}
+		if(enemyf){
+			enemyf->aiUpdate(pSphere);
+			isCollidingModelSphere = oSphere->collisionModel(enemyf, oSphere);
+			if(isCollidingModelSphere == true){
 				lives--;
+				dropSphere();
+				delete enemyf;
+				enemyf = NULL;
+			}
 		}
+		//Camera
+		//if(pLevel1){
+			toX = pLevel1->getPos().x; toY = pLevel1->getPos().y; toZ = pLevel1->getPos().z;
+		//}
 	}
-	if(enemyf){
-		enemyf->aiUpdate(pSphere);
-		isCollidingModelSphere = oSphere->collisionModel(enemyf, oSphere);
-		if(isCollidingModelSphere == true){
-			lives--;
-			dropSphere();
-			delete enemyf;
-			enemyf = NULL;
-		}
-	}
-	//Camera
-	//if(pLevel1){
-		toX = pLevel1->getPos().x; toY = pLevel1->getPos().y; toZ = pLevel1->getPos().z;
-	//}
 }
 
 void Game::RenderHUD(){
 	Set2D(0, m_width, m_height, 0); // Change to 2D view and use 1:1 pixel resolution with [0,0] origin being at the top-left corner.
 	glDisable(GL_DEPTH_TEST);  // Disable depth testing so the HUD will not be hidden by the 3D graphics
+	glDisable(GL_LIGHTING);
 	glEnable(GL_BLEND);  // Semi-transparent background 
 	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 	glColor4f(0.0f, 0.0f, 0.9f, 0.5f);
@@ -146,48 +158,79 @@ void Game::RenderHUD(){
 		glVertex2f(m_width, 0);
 	glEnd();
 	glDisable(GL_BLEND);
-	
-	font1->setColor(1.0f, 1.0f, 0.0f);
 	strcpy_s(text, "Ball Dropper - Project Portfolio");
 	font1->printString(4, 15, text);
-	getline(loadFileif,line);
-	char s[255];
-	strcpy(s, line.c_str());
-	sprintf(text, "Avg FPS: %.1f Score: %i Lives: %i String: %s", (float)fCount / cft, (int)score, (int)lives, s);
-	font1->printString(400, 15, text);
-	sprintf(text, "Ball Density: %i", (int)sphereDensity);
-	font1->printString(400, 50, text);
-	//sprintf(text, "Level type: %s Score: %i",);
+	font1->setColor(1.0f, 1.0f, 0.0f);
+	if(GAMESTATE == MAINSTATESCREEN){
+		sprintf(text, "Ball Density: %i", (int)sphereDensity);
+		font1->printString(400, 50, text);
+	}
+	if(GAMESTATE == PLAYSTATESCREEN){
+		sprintf(text, "Avg FPS: %.1f Score: %i Lives: %i", (float)fCount / cft, (int)score, (int)lives);
+		font1->printString(400, 15, text);
+		loadFileof.open("loadText.txt");
+		char words[225];
+		string textScore = "Score: ";
+		string result;
+		sprintf(words, "%i ", (int)score);
+		result = textScore + words;
+		loadFileof << result;
 	
+		//sprintf(text, "Level type: %s Score: %i",);
+	}
+	if(GAMESTATE == ENDSTATESCREEN){
+		getline(loadFileif,line);
+		char s[255];
+		strcpy(s, line.c_str());
+		sprintf(text, "%s", s);
+		font1->printString(400, 50, text);
+	}
 	if(gameState == 0){
 	}
 
 	Set3D(VIEW_ANGLE, NEAR_CLIPPING, FAR_CLIPPING); // Set back to 3D
+	glEnable(GL_LIGHTING);
 }
 
 // Render the objects in their current state.
 void Game::Render(){
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-	//Camera
-	if(placingWalls == false){
-		gluLookAt(camX+2, camY+2 - droppingY, camZ, toX, toY, toZ, 0.0f, 1.0f, 0.0f);
-	}
+	//Light
+	glDisable(GL_TEXTURE_2D);
+	glDisable(GL_LIGHTING);
 
-	if(placingWalls == true){
-		gluLookAt(camX, camY+2 - droppingY, camZ, toX, toY, toZ, 0.0f, 1.0f, 0.0f);
+	glColor3f(1.0f, 1.0f, 0.0f);
+	glPushMatrix();
+		glTranslatef(lightPos[0], lightPos[1], lightPos[2]);
+//		gluSphere(lSphere, 20.0f, 20, 12);
+	glPopMatrix();
+	glEnable(GL_LIGHTING);
+	glLightfv(GL_LIGHT0, GL_POSITION, lightPos);
+	if(GAMESTATE == MAINSTATESCREEN){
+
 	}
-	if(oLevel1){
-		oLevel1->render();
-	}
-	if(goal){
-		goal->render();
-	}
-	//Objects Rendering
+	if(GAMESTATE == PLAYSTATESCREEN){
+		//Camera
+		if(placingWalls == false){
+			gluLookAt(camX+2, camY+5, camZ, toX, toY, toZ, 0.0f, 1.0f, 0.0f);
+		}
+
+		if(placingWalls == true){
+			gluLookAt(camX, camY+5, camZ, toX, toY, toZ, 0.0f, 1.0f, 0.0f);
+		}
+		if(oLevel1){
+			oLevel1->render();
+		}
+		if(goal){
+			goal->render();
+		}
+		//Objects Rendering
 	
-	oSphere->render();
-	skyBox->render();
-	if(enemyf){
-		enemyf->output();
+		oSphere->render();
+		skyBox->render();
+		if(enemyf){
+			enemyf->output();
+		}
 	}
 	//End
 	RenderHUD();
@@ -274,15 +317,15 @@ void Game::deleteEverything(){
 void Game::createLevel1(){
 	int randType = rnd.number(0, 3);
 	if(!pLevel1){
-		pLevel1 = levelFact->createLevel(IceL,2.0,0.3,2.0, m_world);
+		pLevel1 = levelFact->createLevel(randType,2.0,0.3,2.0, m_world);
 		pLevel1->setPos(Vector(0.0,0.0,0.0));
 
 	}
 	tiltX = 0;
 	tiltZ = 0;
 	//pLevel1->initFixed(m_world);
-	pLevel1->getRigidBody()->setPosition(hkVector4(0.0,droppingY,0.0));
-	droppingY = droppingY - 5.0;
+	pLevel1->getRigidBody()->setPosition(hkVector4(0.0,0.0,0.0));
+	//droppingY = droppingY - 5.0;
 
 	if(!oLevel1){
 		oLevel1 = new OGL_Level(pLevel1, pLevel1->getTextureName());
@@ -387,4 +430,23 @@ void Game::setSphereDensity(int densityNum){
 
 int Game::getSphereDensity(){
 	return sphereDensity;
+}
+
+void Game::playInit(){
+	levelFact = new LevelFactoryImplementation();
+	enemyFact = new EnemyFactoryImplementation();
+
+	initPhysicsObjects();
+	
+	oSphere = new OGL_Sphere(pSphere, "Images/metal.bmp");
+	oSphere->setRGB(1.0,1.0,1.0);
+
+	skyBox = new Marker(15, 15, 15, "Images/sky.bmp");
+	skyBox->setRGB(1.0,1.0,1.0);
+
+	makeGoal();
+
+	loadFileif.open("loadText.txt");
+	
+	enemyf = enemyFact->createEnemy(BIG, 100, 0, 10);
 }

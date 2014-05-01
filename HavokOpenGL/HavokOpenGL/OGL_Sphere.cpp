@@ -71,23 +71,23 @@ bool OGL_Sphere::collisionModel(Enemy* sEnemy, OGL_Sphere* cSphere){
 	p = cSphere->getHavokObj()->getPos().x;
 	
 	float hsxA = cSphere->csRadius;
-	float hsxB = 0.2;
+	float hsxB = sEnemy->enemy->bb.xSize()/2;
 
-	if(sEnemy->px < cSphere->getHavokObj()->getPos().x){
-		Dx = (cSphere->getHavokObj()->getPos().x - hsxB) - (sEnemy->px + hsxA);
+	if(sEnemy->px < cSphere->getHavokObj()->getRigidBody()->getPosition().getComponent(0)){
+		Dx = ((float)cSphere->getHavokObj()->getRigidBody()->getPosition().getComponent(0) - hsxB) - (sEnemy->px + hsxA);
 	}
 	else{
-		Dx = (sEnemy->px - hsxB) - (cSphere->getHavokObj()->getPos().x + hsxA);
+		Dx = (sEnemy->px - hsxB) - ((float)cSphere->getHavokObj()->getRigidBody()->getPosition().getComponent(0) + hsxA);
 	}
 
 	float hszA = cSphere->csRadius;
-	float hszB = 0.2;
+	float hszB = sEnemy->enemy->bb.zSize()/2;
 
-	if(sEnemy->pz < cSphere->getHavokObj()->getPos().z){
-		Dz = (cSphere->getHavokObj()->getPos().z - hszB) - (sEnemy->pz + hszA);
+	if(sEnemy->pz < cSphere->getHavokObj()->getRigidBody()->getPosition().getComponent(2)){
+		Dz = ((float)cSphere->getHavokObj()->getRigidBody()->getPosition().getComponent(2) - hszB) - (sEnemy->pz + hszA);
 	}
 	else{
-		Dz = (sEnemy->pz - hszB) - (cSphere->getHavokObj()->getPos().z + hszA);
+		Dz = (sEnemy->pz - hszB) - ((float)cSphere->getHavokObj()->getRigidBody()->getPosition().getComponent(2) + hszA);
 	}
 	if(Dx <= 0 &&/* Dy <= 0 ||*/ Dz <= 0){
 		return true;

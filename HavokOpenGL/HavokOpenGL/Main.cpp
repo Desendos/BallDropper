@@ -68,7 +68,7 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam){
 					//PostQuitMessage(0);
 					break;
 				case VK_SPACE:
-					if(g_Game.gameState == 0){
+					if(g_Game.GAMESTATE == 1){
 						g_Game.physicsState = true;
 						g_Game.gameState = 1;
 					}
@@ -85,7 +85,15 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam){
 					
 					break;
 				case VK_RIGHT:
-					
+					if(g_Game.GAMESTATE < 2){
+						g_Game.GAMESTATE = g_Game.GAMESTATE+1;
+						if(g_Game.GAMESTATE == 1){
+							g_Game.playInit();
+						}
+					}
+					else{
+						g_Game.GAMESTATE = 0;
+					}
 					break;
 				case VK_LEFT:
 					

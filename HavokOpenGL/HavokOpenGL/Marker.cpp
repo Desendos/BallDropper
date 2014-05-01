@@ -27,6 +27,7 @@ Marker::~Marker(void)
 void Marker::render(){
 	glPushMatrix();
 		glEnable(GL_TEXTURE_2D);  
+		glDisable(GL_LIGHTING);
 		glBindTexture(GL_TEXTURE_2D, texture);
 		glColor3f(mr, mg, mb);
 		// Perform transformations here in TRS order
@@ -39,6 +40,7 @@ void Marker::render(){
 		drawFace(3, 0, 1, 2);
 		drawFace(4, 7, 6, 5);
 		glDisable(GL_TEXTURE_2D);
+		glEnable(GL_LIGHTING);
 	glPopMatrix();
 }
 
