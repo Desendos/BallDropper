@@ -16,6 +16,7 @@ public:
 	virtual void createPlatformObjects() = 0;
 	void init(hkpWorld* world);
 	void initFixed(hkpWorld* world);
+	void initFixedIce(hkpWorld* world);
 	char* getTextureName();
 };
 

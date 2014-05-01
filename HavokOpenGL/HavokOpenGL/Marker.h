@@ -25,11 +25,13 @@ public:
 	bool collides(Marker* mark);
 	bool collidesBox(OGL_Box* cbox);
 	bool collidesWithSphere(OGL_Sphere* cSphere);
+	bool collidesWithSphereAndModel(OGL_Sphere* cSphere, Enemy* cEnemy);
 	float sx, sy, sz;
 	float px,py,pz;
 	float mr, mg, mb;
 	float Dx,Dy,Dz;
 	Vector pos;
+	float p;
 	unsigned int texture;
 };
 

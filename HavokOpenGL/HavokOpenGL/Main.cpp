@@ -131,7 +131,17 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam){
 					}
 					break;
 				case VK_E:
-					
+					break;
+				case VK_O:
+					if(g_Game.getSphereDensity() > 2000){
+						g_Game.setSphereDensity(g_Game.getSphereDensity() - 1000);
+					}
+					break;
+
+				case VK_P:
+					if(g_Game.getSphereDensity() < 8000){
+						g_Game.setSphereDensity(g_Game.getSphereDensity() + 1000);
+					}
 					break;
 				default:
 					break;

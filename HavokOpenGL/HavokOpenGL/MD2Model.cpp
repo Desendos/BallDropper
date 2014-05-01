@@ -112,6 +112,8 @@ modelData_t* MD2Model::LoadMD2Model(char *filename, char *textureName){
 		  pointListPtr[i].point.x = frame->scale.x * frame->fp[i].v[0] + frame->translate.x;
 		  pointListPtr[i].point.y = frame->scale.y * frame->fp[i].v[1] + frame->translate.y;
 		  pointListPtr[i].point.z = frame->scale.z * frame->fp[i].v[2] + frame->translate.z;
+		  if(j == 0) //calc AABB for frame 0
+			bb.add(Vector(pointListPtr[i].point.x, pointListPtr[i].point.z, -pointListPtr[i].point.y));
        }
     }
 			 

@@ -7,11 +7,13 @@ private:
 	static Sphere* instance;
 public:
 	Sphere(float x, float y, float z);
+	Sphere(float x, float y, float z, int densityNum);
 	~Sphere(void);
 	void init(hkpWorld* world);
 	float sx;
 	float sy;
 	float sz;
-	static Sphere* getInstance();
+	int mDensity;
+	static Sphere* getInstance(int densityNum);
 };
 

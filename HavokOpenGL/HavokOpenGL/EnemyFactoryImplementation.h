@@ -9,6 +9,6 @@ class EnemyFactoryImplementation :
 public:
 	EnemyFactoryImplementation(void);
 	~EnemyFactoryImplementation(void);
-	Enemy* createEnemy(int enemyType);
+	Enemy* createEnemy(int enemyType, float x, float y, float z);
 };
 

@@ -34,6 +34,12 @@ void Level::initFixed(hkpWorld *world){
 	sBox->setRadius(0.001f); // adjust the convex radius as req’d
 	setRigidBodyInfoFixed(world, sBox, calcMass);
 }
+void Level::initFixedIce(hkpWorld *world){
+	float calcMass = density * sx * sy * sz;	//mass = density*vol
+	hkpBoxShape* sBox = new hkpBoxShape(hkVector4(sx, sy, sz));
+	sBox->setRadius(0.001f); // adjust the convex radius as req’d
+	setRigidBodyInfoLessFriction(world, sBox, calcMass);
+}
 
 char* Level::getTextureName(){
 	return textureName;

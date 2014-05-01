@@ -10,13 +10,13 @@ EnemyFactoryImplementation::~EnemyFactoryImplementation(void)
 {
 }
 
-Enemy* EnemyFactoryImplementation::createEnemy(int enemyType){
+Enemy* EnemyFactoryImplementation::createEnemy(int enemyType, float x, float y, float z){
 	switch(enemyType){
 	case BIG:
-		return new EnemyBig;
+		return new EnemyBig(x,y,z);
 		break;
 	case SMALL:
-		return new EnemySmall;
+		return new EnemySmall(/*x,y,z*/);
 		break;
 	default: return NULL;
 	}

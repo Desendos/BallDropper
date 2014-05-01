@@ -5,9 +5,19 @@ EnemyBig::EnemyBig(void)
 {
 	enemy = new MD2Model;
 	enemy->LoadMD2Model("Data/pknight/pknight.md2", "Data/pknight/pknight.bmp");
-	px = 0.0;
-	py = 20.0;
-	pz = 0.0;
+	//px = 0.0;
+	//py = 20.0;
+	//pz = 0.0;
+	enemy->pos = Vector(px, py, pz);	//FIXED position
+}
+
+EnemyBig::EnemyBig(float x, float y, float z)
+{
+	enemy = new MD2Model;
+	enemy->LoadMD2Model("Data/pknight/pknight.md2", "Data/pknight/pknight.bmp");
+	px = x;
+	py = y;
+	pz = z;
 	enemy->pos = Vector(px, py, pz);	//FIXED position
 }
 

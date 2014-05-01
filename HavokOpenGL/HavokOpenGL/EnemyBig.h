@@ -5,6 +5,7 @@ class EnemyBig :
 {
 public:
 	EnemyBig(void);
+	EnemyBig(float x, float y, float z);
 	~EnemyBig(void);
 	void output();
 	

@@ -9,6 +9,10 @@ OGL_Sphere::OGL_Sphere(Sphere* hvkBox) : HvkOGLObj(hvkBox){
 	colSphere = gluNewQuadric();
 	gluQuadricDrawStyle(colSphere, GLU_LINE);
 	gluQuadricNormals(colSphere, GLU_SMOOTH);
+	
+	px = hObj->getPos().x;
+	py = hObj->getPos().y;
+	pz = hObj->getPos().z;
 }
 
 OGL_Sphere::OGL_Sphere(Sphere* hvkBox, char *img) : HvkOGLObj(hvkBox, img){
@@ -18,6 +22,10 @@ OGL_Sphere::OGL_Sphere(Sphere* hvkBox, char *img) : HvkOGLObj(hvkBox, img){
 	colSphere = gluNewQuadric();
 	gluQuadricDrawStyle(colSphere, GLU_FILL);
 	gluQuadricNormals(colSphere, GLU_SMOOTH);
+
+	px = hObj->getPos().x;
+	py = hObj->getPos().y;
+	pz = hObj->getPos().z;
 }
 
 void OGL_Sphere::render(){
@@ -56,3 +64,35 @@ void OGL_Sphere::setSize(float size){
 	csRadius = hs * sqrt(3.0f);
 }
 
+bool OGL_Sphere::collisionModel(Enemy* sEnemy, OGL_Sphere* cSphere){
+	//float hsxA = csRadius;
+//	float hsxB = sEnemy->enemy->bb.xSize()/2;
+
+	p = cSphere->getHavokObj()->getPos().x;
+	
+	float hsxA = cSphere->csRadius;
+	float hsxB = 0.2;
+
+	if(sEnemy->px < cSphere->getHavokObj()->getPos().x){
+		Dx = (cSphere->getHavokObj()->getPos().x - hsxB) - (sEnemy->px + hsxA);
+	}
+	else{
+		Dx = (sEnemy->px - hsxB) - (cSphere->getHavokObj()->getPos().x + hsxA);
+	}
+
+	float hszA = cSphere->csRadius;
+	float hszB = 0.2;
+
+	if(sEnemy->pz < cSphere->getHavokObj()->getPos().z){
+		Dz = (cSphere->getHavokObj()->getPos().z - hszB) - (sEnemy->pz + hszA);
+	}
+	else{
+		Dz = (sEnemy->pz - hszB) - (cSphere->getHavokObj()->getPos().z + hszA);
+	}
+	if(Dx <= 0 &&/* Dy <= 0 ||*/ Dz <= 0){
+		return true;
+	}
+	else{
+		return false;
+	}
+}

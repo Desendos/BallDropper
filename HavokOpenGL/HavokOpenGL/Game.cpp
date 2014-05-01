@@ -21,6 +21,8 @@ Game::Game(void){
 	tiltZ = 0;
 	sphereInZone= false;
 	lives = 3;
+	sphereDensity = 4000;
+	isCollidingModelSphere = false;
 }
 
 Game::~Game(void){
@@ -52,13 +54,14 @@ void Game::Initialise(){
 
 	makeGoal();
 
-	/*loadFileof.open("loadText.txt");
+	loadFileof.open("loadText.txt");
 	loadFileof << "Line ";
 	loadFileof.close();
 
-	loadFileif.open("loadText.txt");*/
+	loadFileif.open("loadText.txt");
 	
-	enemyf = enemyFact->createEnemy(BIG);
+	enemyf = enemyFact->createEnemy(BIG, 100, 0, 10);
+	//enemyf->enemy->pos = Vector(100.0,0.0,10.0);
 }
 
 void Game::Shutdown(){
@@ -66,6 +69,7 @@ void Game::Shutdown(){
 	DebugOut("Game::Shutdown being called");
 	delete timer;
 	delete font1;
+	//enemyf->enemy->
 }
 
 void Game::Update(){
@@ -113,7 +117,16 @@ void Game::Update(){
 				lives--;
 		}
 	}
-	enemyf->aiUpdate(pSphere);
+	if(enemyf){
+		enemyf->aiUpdate(pSphere);
+		isCollidingModelSphere = oSphere->collisionModel(enemyf, oSphere);
+		if(isCollidingModelSphere == true){
+			lives--;
+			dropSphere();
+			delete enemyf;
+			enemyf = NULL;
+		}
+	}
 	//Camera
 	//if(pLevel1){
 		toX = pLevel1->getPos().x; toY = pLevel1->getPos().y; toZ = pLevel1->getPos().z;
@@ -137,10 +150,13 @@ void Game::RenderHUD(){
 	font1->setColor(1.0f, 1.0f, 0.0f);
 	strcpy_s(text, "Ball Dropper - Project Portfolio");
 	font1->printString(4, 15, text);
-//	getline(loadFileif,line);
-	sprintf(text, "Avg FPS: %.1f Score: %i Lives: %i String: %s", (float)fCount / cft, (int)score, (int)lives, (string)line);
-	
+	getline(loadFileif,line);
+	char s[255];
+	strcpy(s, line.c_str());
+	sprintf(text, "Avg FPS: %.1f Score: %i Lives: %i String: %s", (float)fCount / cft, (int)score, (int)lives, s);
 	font1->printString(400, 15, text);
+	sprintf(text, "Ball Density: %i", (int)sphereDensity);
+	font1->printString(400, 50, text);
 	//sprintf(text, "Level type: %s Score: %i",);
 	
 	if(gameState == 0){
@@ -158,7 +174,7 @@ void Game::Render(){
 	}
 
 	if(placingWalls == true){
-		gluLookAt(camX, camY+10 - droppingY, camZ, toX, toY, toZ, 0.0f, 1.0f, 0.0f);
+		gluLookAt(camX, camY+2 - droppingY, camZ, toX, toY, toZ, 0.0f, 1.0f, 0.0f);
 	}
 	if(oLevel1){
 		oLevel1->render();
@@ -170,7 +186,9 @@ void Game::Render(){
 	
 	oSphere->render();
 	skyBox->render();
-	enemyf->output();
+	if(enemyf){
+		enemyf->output();
+	}
 	//End
 	RenderHUD();
 	fCount++;
@@ -222,10 +240,10 @@ void Game::initPhysicsObjects(){
 	//Make Level1
 	createLevel1();
 	//Make Sphere and drop it
-	pSphere = Sphere::getInstance();
+	pSphere = Sphere::getInstance(sphereDensity);
 	pSphere->setPos(Vector(0.0,3.0,0.0));
 	pSphere->init(m_world);
-	dropSphere();
+	//dropSphere();
 
 	//makeWall();
 
@@ -256,13 +274,13 @@ void Game::deleteEverything(){
 void Game::createLevel1(){
 	int randType = rnd.number(0, 3);
 	if(!pLevel1){
-		pLevel1 = levelFact->createLevel(randType,2.0,0.3,2.0);
+		pLevel1 = levelFact->createLevel(IceL,2.0,0.3,2.0, m_world);
 		pLevel1->setPos(Vector(0.0,0.0,0.0));
 
 	}
 	tiltX = 0;
 	tiltZ = 0;
-	pLevel1->initFixed(m_world);
+	//pLevel1->initFixed(m_world);
 	pLevel1->getRigidBody()->setPosition(hkVector4(0.0,droppingY,0.0));
 	droppingY = droppingY - 5.0;
 
@@ -352,6 +370,21 @@ void Game::controlsLogic(){
 }
 
 void Game::dropSphere(){
-	pSphere->getRigidBody()->setPosition(hkVector4(pLevel1->getPos().x,pLevel1->getPos().y + 6.0,pLevel1->getPos().z));
+	//pSphere->removeRigidBody(m_world);
+	//delete pSphere;
+	//pSphere = NULL;
+	//pSphere = Sphere::getInstance(sphereDensity);
+	//pSphere->setPos(Vector(0.0,3.0,0.0));
+	//pSphere->init(m_world);
+
+	pSphere->getRigidBody()->setPosition(hkVector4(pLevel1->getPos().x,pLevel1->getPos().y + 3.0,pLevel1->getPos().z));
 	pSphere->getRigidBody()->setRotation(hkQuaternion(1,0,0,0));
+}
+
+void Game::setSphereDensity(int densityNum){
+	sphereDensity = densityNum;
+}
+
+int Game::getSphereDensity(){
+	return sphereDensity;
 }

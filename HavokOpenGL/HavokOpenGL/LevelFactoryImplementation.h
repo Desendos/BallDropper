@@ -12,6 +12,6 @@ class LevelFactoryImplementation :
 public:
 	LevelFactoryImplementation(void);
 	~LevelFactoryImplementation(void);
-	Level* createLevel(int levelType, float x, float y, float z);
+	Level* createLevel(int levelType, float x, float y, float z, hkpWorld* world);
 };
 

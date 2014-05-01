@@ -5,6 +5,6 @@ class EnemyFactory
 public:
 	EnemyFactory(void);
 	~EnemyFactory(void);
-	virtual Enemy* createEnemy(int enemyType) = 0;
+	virtual Enemy* createEnemy(int enemyType, float x, float y, float z) = 0;
 };
 

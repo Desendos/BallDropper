@@ -37,10 +37,10 @@ void HavokObj::setRigidBodyInfoFixed(hkpWorld *world, hkpShape *hks, float mass)
 	rb->removeReference();
 }
 
-void HavokObj::setRigidBodyInfoLessFriction(hkpWorld *world, hkpShape *hks, float mass, float friction){
+void HavokObj::setRigidBodyInfoLessFriction(hkpWorld *world, hkpShape *hks, float mass){
 	rigidBodyInfo.m_shape = hks;  
 	hkpInertiaTensorComputer::setShapeVolumeMassProperties(hks, mass, rigidBodyInfo);
-	rigidBodyInfo.m_motionType = hkpMotion::MOTION_DYNAMIC;
+	rigidBodyInfo.m_motionType = hkpMotion::MOTION_FIXED;
 	rigidBodyInfo.m_position.set(pos.x, pos.y, pos.z);
 	rigidBodyInfo.m_friction = 0.1;
 	rigidBodyInfo.m_restitution = 0.6f;
@@ -48,16 +48,16 @@ void HavokObj::setRigidBodyInfoLessFriction(hkpWorld *world, hkpShape *hks, floa
 	hks->removeReference();
 	world->addEntity(rb);
 	rb->removeReference();
-
 }
 
-void HavokObj::setRigidBodyInfoSphere(hkpWorld *world, hkpSphereShape *hks){
+void HavokObj::setRigidBodyInfoSphere(hkpWorld *world, hkpSphereShape *hks, int densityNum){
 	rigidBodyInfo.m_shape = hks;
 	rigidBodyInfo.m_motionType = hkpMotion::MOTION_DYNAMIC;
 	hkpInertiaTensorComputer::setShapeVolumeMassProperties(hks, 1.0f, rigidBodyInfo);
 	rigidBodyInfo.m_position.set(1.0, 1.2, 0.0);
 	rigidBodyInfo.m_friction = 0.4f;
 	rigidBodyInfo.m_restitution = 0.2f;
+	density = densityNum;
 
 	rb = new hkpRigidBody(rigidBodyInfo);
 	hks->removeReference();

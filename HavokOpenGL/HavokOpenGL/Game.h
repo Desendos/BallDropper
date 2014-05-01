@@ -89,6 +89,7 @@ private:
 	//Variables
 	bool isColliding;
 	bool intCalled;
+	bool isCollidingModelSphere;
 	float toX,toY,toZ;
 	bool placingWalls;
 	int wallNumber;
@@ -99,6 +100,7 @@ private:
 	bool sphereInZone;
 	int lives;
 	string line;
+	int sphereDensity;
 public:
 	bool physicsState;
 	int gameState;
@@ -175,4 +177,7 @@ public:
 	void controlsLogic();
 	
 	void dropSphere();
+
+	void setSphereDensity(int densityNum);
+	int getSphereDensity();
 };

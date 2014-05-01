@@ -160,6 +160,8 @@ bool Marker::collidesWithSphere(OGL_Sphere* cSphere){
 	float hsxA = sx/2;
 	float hsxB = cSphere->csRadius;
 
+	 p = cSphere->getHavokObj()->getPos().x;
+
 	if(px < cSphere->getHavokObj()->getPos().x){
 		Dx = (cSphere->getHavokObj()->getPos().x - hsxB) - (px + hsxA);
 	}
@@ -177,6 +179,36 @@ bool Marker::collidesWithSphere(OGL_Sphere* cSphere){
 		Dz = (pz - hszB) - (cSphere->getHavokObj()->getPos().z + hszA);
 	}
 	if(Dx <= 0 &&/* Dy <= 0 ||*/ Dz <= 0){
+		return true;
+	}
+	else{
+		return false;
+	}
+}
+
+bool Marker::collidesWithSphereAndModel(OGL_Sphere* cSphere, Enemy* cEnemy){
+	float hsxA = cEnemy->enemy->bb.xSize()/2;
+	float hsxB = cSphere->csRadius;
+
+	 p = cSphere->getHavokObj()->getPos().x;
+
+	if(px > cSphere->getHavokObj()->getPos().x){
+		Dx = (cSphere->getHavokObj()->getPos().x - hsxB) - (px + hsxA);
+	}
+	else{
+		Dx = (px - hsxB) - (cSphere->getHavokObj()->getPos().x + hsxA);
+	}
+
+	float hszA = cEnemy->enemy->bb.zSize()/2;
+	float hszB = cSphere->csRadius;
+
+	if(pz > cSphere->getHavokObj()->getPos().z){
+		Dz = (cSphere->getHavokObj()->getPos().z - hszB) - (pz + hszA);
+	}
+	else{
+		Dz = (pz - hszB) - (cSphere->getHavokObj()->getPos().z + hszA);
+	}
+	if(Dx >= 0 &&/* Dy <= 0 ||*/ Dz >= 0){
 		return true;
 	}
 	else{

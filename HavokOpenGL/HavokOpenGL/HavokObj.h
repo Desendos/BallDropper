@@ -31,8 +31,8 @@ public:
 
 	void setRigidBodyInfo(hkpWorld *world, hkpShape *hks, float mass, float friction);
 	void setRigidBodyInfoFixed(hkpWorld *world, hkpShape *hks, float mass);
-	void setRigidBodyInfoLessFriction(hkpWorld *world, hkpShape *hks, float mass, float friction);
-	void setRigidBodyInfoSphere(hkpWorld *world, hkpSphereShape *hks);
+	void setRigidBodyInfoLessFriction(hkpWorld *world, hkpShape *hks, float mass);
+	void setRigidBodyInfoSphere(hkpWorld *world, hkpSphereShape *hks, int densityNum);
 	void setPosAfter();
 	void removeRigidBody(hkpWorld *world);
 		

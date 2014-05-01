@@ -5,7 +5,7 @@ class LevelNormal :
 {
 public:
 	LevelNormal(void);
-	LevelNormal(float x, float y, float z);
+	LevelNormal(float x, float y, float z, hkpWorld* world);
 	float sx,sy,sz;
 	~LevelNormal(void);
 	void createPlatformObjects();
