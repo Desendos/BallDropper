@@ -53,6 +53,7 @@ class Game : public BaseGame{
 	friend LRESULT CALLBACK WndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam);
 private:
 	// HERE WE DECLARE ANY FONTS, TIMERS OR OTHER VARIABLES WE WANT
+
 	int mouseX, mouseY;
 	float camX, camY, camZ, camRad;
 	float angEW, angNS;
