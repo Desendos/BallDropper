@@ -18,6 +18,7 @@ Enemy::Enemy(float x, float y, float z)
 	py = y;
 	pz = z;
 	enemy->pos = Vector(px,py,pz);
+	scaler = 0.03;
 }
 Enemy::~Enemy(void)
 {
@@ -27,7 +28,7 @@ void Enemy::render(){
 	glEnable(GL_TEXTURE_2D);
 	glColor3f(1.0, 1.0, 1.0);
 	glPushMatrix();
-	glScalef(0.03,0.03,0.03);
+	glScalef(scaler,scaler,scaler);
 	glTranslatef(enemy->pos.x, enemy->pos.y, enemy->pos.z);	
 		glRotatef(90.0f, -1.0f, 0.0f, 0.0f);
 		enemy->DisplayMD2(0);  //display frame 0
@@ -43,20 +44,21 @@ void Enemy::aiUpdate(Sphere* ball){
 	//}
 	//hkVector4 vec = ball->getRigidBody()->getPosition();
 	//hkVector4 vec2 = hkVector4(0,0,0,0);
-	
-	if(ball->getRigidBody()->getPosition().getComponent(0) < px){
+	float sposX = ball->getRigidBody()->getPosition().getComponent(0);
+	float sposZ = ball->getRigidBody()->getPosition().getComponent(2);
+	if(sposX < px*scaler){
 		px = px - 0.1;
 		enemy->pos = Vector(px, py, pz);
 	}
-	if(ball->getRigidBody()->getPosition().getComponent(0) > px){
+	if(sposX > px*scaler){
 		px = px + 0.1;
 		enemy->pos = Vector(px, py, pz);
 	}
-	if(ball->getRigidBody()->getPosition().getComponent(2) < pz){
+	if(sposZ < pz*scaler){
 		pz = pz - 0.1;
 		enemy->pos = Vector(px, py, pz);
 	}
-	if(ball->getRigidBody()->getPosition().getComponent(2) > pz){
+	if(sposZ> pz*scaler){
 		pz = pz + 0.1;
 		enemy->pos = Vector(px, py, pz);
 	}

@@ -111,7 +111,7 @@ void Game::Update(){
 			oLevel1->update();
 		}
 		//Collision dectection
-		if(goal){
+		if(goal && oSphere){
 			isColliding = goal->collidesWithSphere(oSphere);
 			if(isColliding == true){
 				deleteEverything();
@@ -225,8 +225,9 @@ void Game::Render(){
 			goal->render();
 		}
 		//Objects Rendering
-	
-		oSphere->render();
+		if(oSphere){
+			oSphere->render();
+		}
 		skyBox->render();
 		if(enemyf){
 			enemyf->output();
@@ -286,7 +287,7 @@ void Game::initPhysicsObjects(){
 	pSphere = Sphere::getInstance(sphereDensity);
 	pSphere->setPos(Vector(0.0,3.0,0.0));
 	pSphere->init(m_world);
-	//dropSphere();
+	dropSphere();
 
 	//makeWall();
 
@@ -413,15 +414,10 @@ void Game::controlsLogic(){
 }
 
 void Game::dropSphere(){
-	//pSphere->removeRigidBody(m_world);
-	//delete pSphere;
-	//pSphere = NULL;
-	//pSphere = Sphere::getInstance(sphereDensity);
-	//pSphere->setPos(Vector(0.0,3.0,0.0));
-	//pSphere->init(m_world);
-
-	pSphere->getRigidBody()->setPosition(hkVector4(pLevel1->getPos().x,pLevel1->getPos().y + 3.0,pLevel1->getPos().z));
+	pSphere->getRigidBody()->setPosition(hkVector4(pLevel1->getPos().x+0.1,pLevel1->getPos().y + 3.0,pLevel1->getPos().z));
 	pSphere->getRigidBody()->setRotation(hkQuaternion(1,0,0,0));
+	pSphere->getRigidBody()->setAngularVelocity(hkVector4(0,0,0));
+	pSphere->getRigidBody()->setLinearVelocity(hkVector4(0,0,0));
 }
 
 void Game::setSphereDensity(int densityNum){
@@ -448,5 +444,5 @@ void Game::playInit(){
 
 	loadFileif.open("loadText.txt");
 	
-	enemyf = enemyFact->createEnemy(BIG, 100, 0, 10);
+	enemyf = enemyFact->createEnemy(SMALL, 100, 60, 10);
 }

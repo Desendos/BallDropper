@@ -19,6 +19,7 @@ EnemyBig::EnemyBig(float x, float y, float z)
 	py = y;
 	pz = z;
 	enemy->pos = Vector(px, py, pz);	//FIXED position
+	scaler = 0.03;
 }
 
 
@@ -30,7 +31,7 @@ void EnemyBig::output(){
 	glEnable(GL_TEXTURE_2D);
 	glColor3f(1.0, 1.0, 1.0);
 	glPushMatrix();
-	glScalef(0.03,0.03,0.03);
+	glScalef(scaler,scaler,scaler);
 	glTranslatef(enemy->pos.x, enemy->pos.y, enemy->pos.z);	
 		glRotatef(90.0f, -1.0f, 0.0f, 0.0f);
 		enemy->DisplayMD2(0);  //display frame 0

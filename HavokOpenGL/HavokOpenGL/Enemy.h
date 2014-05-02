@@ -13,6 +13,7 @@ public:
 	void render();
 	void aiUpdate(Sphere* ball);
 	float px,py,pz;
+	float scaler;
 //	Timer* enemyTimer;
 };
 

@@ -16,7 +16,7 @@ Enemy* EnemyFactoryImplementation::createEnemy(int enemyType, float x, float y, 
 		return new EnemyBig(x,y,z);
 		break;
 	case SMALL:
-		return new EnemySmall(/*x,y,z*/);
+		return new EnemySmall(x,y,z);
 		break;
 	default: return NULL;
 	}

@@ -67,29 +67,37 @@ void OGL_Sphere::setSize(float size){
 bool OGL_Sphere::collisionModel(Enemy* sEnemy, OGL_Sphere* cSphere){
 	//float hsxA = csRadius;
 //	float hsxB = sEnemy->enemy->bb.xSize()/2;
+	float distanceX;
+	float distanceZ;
 
 	p = cSphere->getHavokObj()->getPos().x;
 	
 	float hsxA = cSphere->csRadius;
-	float hsxB = sEnemy->enemy->bb.xSize()/2;
+	float hsxB = (sEnemy->enemy->bb.xSize()*sEnemy->scaler)/2;
 
-	if(sEnemy->px < cSphere->getHavokObj()->getRigidBody()->getPosition().getComponent(0)){
-		Dx = ((float)cSphere->getHavokObj()->getRigidBody()->getPosition().getComponent(0) - hsxB) - (sEnemy->px + hsxA);
+	float sposX = cSphere->getHavokObj()->getRigidBody()->getPosition().getComponent(0);
+	float eposX = sEnemy->px*sEnemy->scaler;
+
+	if(eposX < sposX){
+		distanceX = ((sposX - hsxB) - (eposX + hsxA));
 	}
 	else{
-		Dx = (sEnemy->px - hsxB) - ((float)cSphere->getHavokObj()->getRigidBody()->getPosition().getComponent(0) + hsxA);
+		distanceX = (eposX - hsxB) - (sposX + hsxA);
 	}
 
 	float hszA = cSphere->csRadius;
-	float hszB = sEnemy->enemy->bb.zSize()/2;
+	float hszB = (sEnemy->enemy->bb.zSize()*sEnemy->scaler)/2;
 
-	if(sEnemy->pz < cSphere->getHavokObj()->getRigidBody()->getPosition().getComponent(2)){
-		Dz = ((float)cSphere->getHavokObj()->getRigidBody()->getPosition().getComponent(2) - hszB) - (sEnemy->pz + hszA);
+	float sposZ = cSphere->getHavokObj()->getRigidBody()->getPosition().getComponent(2);
+	float eposZ = sEnemy->pz*sEnemy->scaler;
+
+	if(eposZ < sposZ){
+		distanceZ = (sposZ - hszB) - (eposZ + hszA);
 	}
 	else{
-		Dz = (sEnemy->pz - hszB) - ((float)cSphere->getHavokObj()->getRigidBody()->getPosition().getComponent(2) + hszA);
+		distanceZ = (eposZ - hszB) - (sposZ + hszA);
 	}
-	if(Dx <= 0 &&/* Dy <= 0 ||*/ Dz <= 0){
+	if(distanceX <= 0 &&/* Dy <= 0 ||*/ distanceZ <= 0){
 		return true;
 	}
 	else{

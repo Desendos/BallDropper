@@ -5,7 +5,9 @@ class EnemySmall :
 {
 public:
 	EnemySmall(void);
+	EnemySmall(float x, float y, float z);
 	~EnemySmall(void);
 	void output();
+
 };
 
