@@ -127,13 +127,14 @@ void Game::Update(){
 					lives--;
 			}
 		}
-		if(pLevel1){
-			pLevel1->update(pSphere, oSphere, isCollidingModelSphere);
+		if(enemyf){
+			enemyf->aiUpdate(pSphere);
+			isCollidingModelSphere = oSphere->collisionModel(enemyf, oSphere);
 			if(isCollidingModelSphere == true){
 				lives--;
 				dropSphere();
-				//delete enemyf;
-				//enemyf = NULL;
+				delete enemyf;
+				enemyf = NULL;
 			}
 		}
 		//Camera
@@ -219,9 +220,6 @@ void Game::Render(){
 		}
 		if(oLevel1){
 			oLevel1->render();
-		}
-		if(pLevel1){
-			pLevel1->renderObjects();
 		}
 		if(goal){
 			goal->render();
@@ -322,7 +320,6 @@ void Game::createLevel1(){
 	if(!pLevel1){
 		pLevel1 = levelFact->createLevel(randType,2.0,0.3,2.0, m_world);
 		pLevel1->setPos(Vector(0.0,0.0,0.0));
-		pLevel1->createPlatformObjects();
 
 	}
 	tiltX = 0;

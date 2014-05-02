@@ -9,8 +9,6 @@ public:
 	float sx,sy,sz;
 	~LevelNormal(void);
 	void createPlatformObjects();
-	void update(Sphere* spher, OGL_Sphere* ospher,  bool coll);
-	void renderObjects();
 	//void initFixed(hkpWorld* world);
 };
 

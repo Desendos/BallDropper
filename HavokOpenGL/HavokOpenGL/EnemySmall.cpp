@@ -12,7 +12,7 @@ EnemySmall::EnemySmall(void)
 EnemySmall::EnemySmall(float x, float y, float z)
 {
 	enemy = new MD2Model;
-	enemy->LoadMD2Model("Data/pknight/pknight.md2", "Data/pknight/pknight.bmp");
+	enemy->LoadMD2Model("Data/laalaa/laalaa.md2", "Data/laalaa/laalaa.bmp");
 	px = x;
 	py = y;
 	pz = z;
